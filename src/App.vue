@@ -1,22 +1,22 @@
 <template>
   <div id="app">
-    <HeaderVue />
-    <HomeVue />
-    <FooterVue />
+    <h1>gelli</h1>
+    <!-- <HeaderVue /> -->
+    <!-- <router-link></router-link> -->
+    <router-view></router-view>
+    <!-- <FooterVue /> -->
   </div>
 </template>
 
 <script>
-import FooterVue from "./components/Footer.vue";
-import HeaderVue from "./components/Header.vue";
-import HomeVue from "./pages/Home.vue";
-
+// import HeaderVue from "./components/Header.vue";
+// import FooterVue from "./components/Footer.vue";
 export default {
-  components: {
-    FooterVue,
-    HeaderVue,
-    HomeVue,
-  },
+  name: "App",
+  // components: {
+  //   HeaderVue,
+  //   FooterVue,
+  // },
 };
 </script>
 

@@ -11,6 +11,7 @@
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
+    "vue-router": "^3.4.9",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
@@ -33,7 +34,7 @@
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended",
-      "plugin:prettier/recommended" 
+      "plugin:prettier/recommended"
     ],
     "parserOptions": {
       "parser": "babel-eslint"
@@ -41,13 +42,13 @@
     "rules": {
       "prettier/prettier": [
         "error",
-           {
-            "endOfLine": "auto",
-            "trailingComma": "es5",
-            "printWidth":80,
-            "tabWidth": 2
-           }
-         ]
+        {
+          "endOfLine": "auto",
+          "trailingComma": "es5",
+          "printWidth": 80,
+          "tabWidth": 2
+        }
+      ]
     }
   },
   "browserslist": [
