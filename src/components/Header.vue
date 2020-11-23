@@ -18,7 +18,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="">Sign up</a>
+          <router-link to="signup" class="nav-link">Sign up</router-link>
         </li>
       </ul>
     </div>

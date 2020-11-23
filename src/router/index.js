@@ -12,9 +12,15 @@ Vue.use(VueRouter);
 // });        에러나는데 이유가?
 import NotFound from "../components/NotFound.vue";
 import Home from "../pages/Home.vue";
+import SignUp from "../pages/SignUp.vue";
+import Login from "../pages/Login.vue";
+import test from "./test.vue";
 const router = new VueRouter({
   routes: [
     { path: "/", component: Home },
+    { path: "/signup", component: SignUp },
+    { path: "/login", component: Login },
+    { path: "/test", component: test },
     { path: "*", component: NotFound },
   ],
 });
