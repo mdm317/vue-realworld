@@ -6,7 +6,7 @@
         <p>A place to share your knowledge.</p>
       </div>
     </div>
-
+    <h1>{{ user }}</h1>
     <div class="container page">
       <div class="row">
         <div class="col-md-9">
@@ -129,6 +129,9 @@ export default {
     },
   },
   computed: {
+    user: function () {
+      return this.$store.getters.user;
+    },
     fistPageNation: function () {
       return parseInt((this.currentPage - 1) / 10) * 10 + 1;
     },

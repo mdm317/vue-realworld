@@ -9,11 +9,15 @@
 <script>
 import HeaderVue from "./components/Header.vue";
 import FooterVue from "./components/Footer.vue";
+
 export default {
   name: "App",
   components: {
     HeaderVue,
     FooterVue,
+  },
+  mounted() {
+    // this.$store.dispatch("getUser");
   },
 };
 </script>

@@ -10,18 +10,18 @@ Vue.use(VueRouter);
 //     { path: "*", component: Bar },
 //   ],
 // });        에러나는데 이유가?
-import NotFound from "../components/NotFound.vue";
+// import NotFound from "../components/NotFound.vue";
 import Home from "../pages/Home.vue";
 import SignUp from "../pages/SignUp.vue";
 import Login from "../pages/Login.vue";
 import test from "./test.vue";
 const router = new VueRouter({
   routes: [
-    { path: "/", component: Home },
-    { path: "/signup", component: SignUp },
-    { path: "/login", component: Login },
+    { path: "/", name: "home", component: Home },
+    { path: "/signup", name: "signup", component: SignUp },
+    { path: "/login", name: "login", component: Login },
     { path: "/test", component: test },
-    { path: "*", component: NotFound },
+    { path: "*", component: Home },
   ],
 });
 export default router;

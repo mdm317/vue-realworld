@@ -73,6 +73,14 @@ export default {
           password: this.password,
         };
         await Axios.post(URL + "/users", { user });
+        console.log("[회원가입 성공]:");
+        const loginUser = {
+          email: this.email,
+          password: this.password,
+        };
+        await this.$store.dispatch("login", loginUser);
+
+        this.$router.push({ name: "home" });
       } catch (error) {
         if (
           error.response &&

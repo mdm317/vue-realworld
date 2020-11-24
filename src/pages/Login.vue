@@ -38,8 +38,6 @@
 </template>
 
 <script>
-import axios from "axios";
-import { URL } from "../db";
 import BaseInputVue from "../components/BaseInput.vue";
 export default {
   components: {
@@ -47,25 +45,20 @@ export default {
   },
   data() {
     return {
-      errors: {},
       email: "",
       password: "",
     };
   },
   methods: {
     login: async function () {
-      try {
-        const user = { email: this.email, password: this.password };
-        await axios.post(URL + "/users/login", user);
-      } catch (error) {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.errors
-        ) {
-          this.errors = error.response.data.errors;
-        }
-      }
+      const userLogin = { email: this.email, password: this.password };
+      await this.$store.dispatch("login", userLogin);
+      this.$router.push({ path: "/" });
+    },
+  },
+  computed: {
+    errors: function () {
+      return this.$store.getters.loginErr;
     },
   },
 };
