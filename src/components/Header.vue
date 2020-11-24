@@ -17,7 +17,10 @@
             <i class="ion-gear-a"></i>&nbsp;Settings
           </a>
         </li>
-        <li class="nav-item">
+        <li v-if="username" class="nav-item">
+          <router-link to="" class="nav-link">{{ username }}</router-link>
+        </li>
+        <li v-else class="nav-item">
           <router-link to="signup" class="nav-link">Sign up</router-link>
         </li>
       </ul>
@@ -25,5 +28,11 @@
   </nav>
 </template>
 <script>
-export default {};
+export default {
+  computed: {
+    username() {
+      return this.$store.getters.username;
+    },
+  },
+};
 </script>

@@ -53,7 +53,9 @@ export default {
     login: async function () {
       const userLogin = { email: this.email, password: this.password };
       await this.$store.dispatch("login", userLogin);
-      this.$router.push({ path: "/" });
+      if (!this.errors) {
+        this.$router.push({ path: "/" });
+      }
     },
   },
   computed: {

@@ -2,6 +2,7 @@ import Axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
 import { URL } from "../db";
+import { storeToken } from "../jwt/jwt";
 Vue.use(Vuex);
 // headers: {
 //   'Authorization': `Basic ${token}`
@@ -17,7 +18,7 @@ export const store = new Vuex.Store({
   state: {
     user: {},
     errors: {
-      loginErr: {},
+      loginErr: null,
       serverErr: "",
     },
   },
@@ -34,11 +35,12 @@ export const store = new Vuex.Store({
   },
   mutations: {
     //commit  //computed
+
     loginReq: function (state) {
-      state.errors.loginErr = {};
+      state.errors.loginErr = null;
     },
     loginSuc: function (state, payload) {
-      state.user = payload.user;
+      state.user = payload;
     },
     loginFail: function (state, payload) {
       state.errors.loginErr = payload;
@@ -52,10 +54,11 @@ export const store = new Vuex.Store({
     login: async function (context, payload) {
       try {
         context.commit("loginReq");
-        const response = await Axios.post("local" + "/users/login", {
+        const response = await Axios.post(URL + "/users/login", {
           user: payload,
         });
-        context.commit("loginSuc", response.data);
+        context.commit("loginSuc", response.data.user);
+        storeToken(response.data.user.token);
       } catch (error) {
         console.log("[error]:", error);
         if (
@@ -68,12 +71,14 @@ export const store = new Vuex.Store({
         return context.commit("serverFail", "An internal error occurred");
       }
     },
-    getUser: async function (context) {
+    getUser: async function (context, payload) {
       try {
         const response = await Axios.get(URL + "/user", {
-          withCredentials: true,
+          headers: {
+            Authorization: `Token ${payload}`,
+          },
         });
-        return context.commit("setUser", response.data.user);
+        return context.commit("loginSuc", response.data.user);
       } catch (error) {
         console.log("[error]:", error);
       }
