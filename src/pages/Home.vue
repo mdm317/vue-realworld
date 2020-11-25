@@ -6,7 +6,6 @@
         <p>A place to share your knowledge.</p>
       </div>
     </div>
-    <h1>{{ user }}</h1>
     <div class="container page">
       <div class="row">
         <div class="col-md-9">
@@ -20,7 +19,7 @@
               </li>
             </ul>
           </div>
-
+          <h1 v-if="isLoading">...Loading</h1>
           <ArticlePreviewVue
             v-for="(article, index) in articlelist"
             :key="index"
@@ -71,10 +70,13 @@ export default {
   mounted() {
     (async () => {
       try {
+        this.isLoading = true;
+
         const response = await axios.get(
           URL + `/articles?limit=${this.pageArticleNum}`
         );
         this.articlelist = response.data.articles;
+        this.isLoading = false;
       } catch (error) {
         console.log(error);
       }
@@ -82,6 +84,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       currentPage: 1,
       maxPage: 16,
       pageArticleNum: 10,
@@ -129,9 +132,6 @@ export default {
     },
   },
   computed: {
-    user: function () {
-      return this.$store.getters.user;
-    },
     fistPageNation: function () {
       return parseInt((this.currentPage - 1) / 10) * 10 + 1;
     },

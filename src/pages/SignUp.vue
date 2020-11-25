@@ -12,7 +12,7 @@
               {{ key + " " + errorMessage }}
             </li>
           </ul>
-          <form @submit="registerUser">
+          <form @submit.prevent="registerUser">
             <fieldset class="form-group">
               <BaseInputVue
                 class="form-control form-control-lg"

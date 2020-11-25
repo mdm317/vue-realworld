@@ -26,6 +26,9 @@ export const store = new Vuex.Store({
     username: function (state) {
       return state.user?.username;
     },
+    user: function (state) {
+      return state.user;
+    },
     loginErr: function (state) {
       return state.errors.loginErr;
     },
@@ -45,8 +48,8 @@ export const store = new Vuex.Store({
     loginFail: function (state, payload) {
       state.errors.loginErr = payload;
     },
-    serverFail: function (state, payload) {
-      state.errors.serverErr = payload;
+    logoutReq: function (state) {
+      state.errors.logoutErr = null;
     },
   },
   actions: {
