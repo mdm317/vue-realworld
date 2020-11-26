@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { storeToken } from "../../jwt/jwt";
+import { getToken, storeToken } from "../../jwt/jwt";
 import { URL } from "../../db";
 
 const userStore = {
@@ -30,7 +30,6 @@ const userStore = {
   },
   mutations: {
     //commit  //computed
-
     loginReq: function (state) {
       state.errors.loginErr = null;
     },
@@ -108,6 +107,83 @@ const userStore = {
           context.commit("signupFail", error.response.data.errors);
         }
         context.commit("serverFail", error);
+      }
+    },
+    follow: async function ({ getters, commit }, payload) {
+      const token = getToken();
+      const username = payload;
+      const response = await Axios.post(
+        URL + `/profiles/${username}/follow`,
+        {},
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+      const newArticle = getters.articleDetail;
+
+      newArticle.author = response.data.profile;
+
+      commit("setArticleDetail", newArticle);
+      ///api/profiles/:username/follow
+    },
+    unfollow: async function ({ getters, commit }, payload) {
+      const token = getToken();
+      const username = payload;
+      const response = await Axios.delete(
+        URL + `/profiles/${username}/follow`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+      const newArticle = getters.articleDetail;
+
+      newArticle.author = response.data.profile;
+
+      commit("setArticleDetail", newArticle);
+      ///api/profiles/:username/follow
+    },
+    favoritePost: async function (context, payload) {
+      try {
+        const token = getToken();
+
+        const slug = payload;
+        const response = await Axios.post(
+          URL + `/articles/${slug}/favorite`,
+          {},
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+        const newArticle = response.data.article;
+
+        context.commit("setArticleDetail", newArticle);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    unfavoritePost: async function (context, payload) {
+      try {
+        const token = getToken();
+        const slug = payload;
+        const response = await Axios.delete(
+          URL + `/articles/${slug}/favorite`,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+        const newArticle = response.data.article;
+
+        context.commit("setArticleDetail", newArticle);
+      } catch (error) {
+        console.log(error);
       }
     },
   },
