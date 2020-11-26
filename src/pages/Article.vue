@@ -1,6 +1,5 @@
-import axios from 'axios';
 <template>
-  <div class="article-page">
+  <div v-if="article" class="article-page">
     <div class="banner">
       <div class="container">
         <h1>{{ article.slug }}</h1>
@@ -11,15 +10,23 @@ import axios from 'axios';
             <a href="" class="author">{{ article.author.username }}</a>
             <span class="date">{{ calDate(article.createdAt) }}</span>
           </div>
-          <button class="btn btn-sm btn-outline-secondary">
+          <button
+            @click="clickFollow"
+            class="btn btn-sm btn-outline-secondary"
+            :class="{ active: article.author.following }"
+          >
             <i class="ion-plus-round"></i>
-            &nbsp;{{ "Follow" + "article.author.username" }}
-            <span class="counter">(?)</span>
+            &nbsp;{{ "Follow " + article.author.username }}
+            <span class="counter">()</span>
           </button>
           &nbsp;&nbsp;
-          <button class="btn btn-sm btn-outline-primary">
+          <button
+            class="btn btn-sm btn-outline-primary"
+            :class="{ active: article.favorited }"
+          >
             <i class="ion-heart"></i>
-            &nbsp; Favorite Post <span class="counter">(?)</span>
+            &nbsp; Favorite Post
+            <span class="counter">({{ article.favoritesCount }})</span>
           </button>
         </div>
       </div>
@@ -46,18 +53,26 @@ import axios from 'axios';
             <span class="date">{{ calDate(article.createdAt) }}</span>
           </div>
 
-          <button class="btn btn-sm btn-outline-secondary">
+          <button
+            class="btn btn-sm btn-outline-secondary"
+            :class="{ active: article.author.following }"
+          >
             <i class="ion-plus-round"></i>
-            &nbsp;{{ "Follow" + "article.author.username" }}
-            <span class="counter">(?)</span>
+            &nbsp;{{ "Follow " + article.author.username }}
+            <span class="counter">()</span>
           </button>
           &nbsp;&nbsp;
-          <button class="btn btn-sm btn-outline-primary">
+          <button
+            class="btn btn-sm btn-outline-primary"
+            :class="{ active: article.favorited }"
+          >
             <i class="ion-heart"></i>
-            &nbsp; Favorite Post <span class="counter">(?)</span>
+            &nbsp; Favorite Post
+            <span class="counter">({{ article.favoritesCount }})</span>
           </button>
         </div>
       </div>
+      <CommentBox v-if="comments" :comments="this.comments" :slug="this.slug" />
     </div>
   </div>
 </template>
@@ -65,15 +80,22 @@ import axios from 'axios';
 <script>
 import Axios from "axios";
 import { URL } from "../db";
+import CommentBox from "../components/CommentBox.vue";
+import { getToken } from "../jwt/jwt";
 export default {
+  components: { CommentBox },
   props: {
     slug: String,
   },
   mounted: function () {
     (async () => {
       try {
-        const article = await Axios.get(URL + "/articles/${this.slug}");
-        this.article = article;
+        const articleResponse = await Axios.get(URL + `/articles/${this.slug}`);
+        this.article = articleResponse.data.article;
+        const commentResponse = await Axios.get(
+          URL + `/articles/${this.slug}/comments`
+        );
+        this.comments = commentResponse.data.comments;
       } catch (error) {
         throw Error(error);
       }
@@ -81,10 +103,23 @@ export default {
   },
   data() {
     return {
-      article: {},
+      article: null,
+      comments: null,
     };
   },
+  // GET /api/articles/:slug/comments
   methods: {
+    clickFollow: async function () {
+      const token = getToken();
+      const username = this.article.author.username;
+      const response = await Axios.post(URL + `profiles/${username}/follow`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      this.$store.commit("loginSuc", response.data.user);
+      ///api/profiles/:username/follow
+    },
     calDate: function (dateStr) {
       // "2016-02-18T03:22:56.637Z",
       const month = dateStr.slice(5, 7);

@@ -21,7 +21,7 @@
           </div>
           <h1 v-if="isLoading">...Loading</h1>
           <ArticlePreviewVue
-            v-for="(article, index) in articlelist"
+            v-for="(article, index) in articleList"
             :key="index"
             :article="article"
           />
@@ -35,7 +35,9 @@
               <a
                 v-for="(tag, idx) in tags"
                 class="tag-pill tag-default"
+                :class="{ activetag: idx == clickedId }"
                 :key="idx"
+                :id="idx"
                 @click="clickTag"
                 >{{ tag }}</a
               >
@@ -57,9 +59,7 @@
 </template>
 
 <script>
-import axios from "axios";
 import ArticlePreviewVue from "../components/ArticlePreview.vue";
-import { URL } from "../db";
 import PagenationVue from "../components/Pagenation.vue";
 
 export default {
@@ -68,27 +68,14 @@ export default {
     PagenationVue,
   },
   mounted() {
-    (async () => {
-      try {
-        this.isLoading = true;
-
-        const response = await axios.get(
-          URL + `/articles?limit=${this.pageArticleNum}`
-        );
-        this.articlelist = response.data.articles;
-        this.isLoading = false;
-      } catch (error) {
-        console.log(error);
-      }
-    })();
+    this.$store.dispatch("getArticleList", { limit: this.pageArticleNum });
   },
   data() {
     return {
-      isLoading: true,
       currentPage: 1,
+      clickedId: -1,
       maxPage: 16,
       pageArticleNum: 10,
-      articlelist: [],
       tags: [
         "programming",
         "javascript",
@@ -104,10 +91,11 @@ export default {
   methods: {
     clickTag: async function (e) {
       const tag = e.target.innerText;
-      const response = await axios.get(
-        URL + `/articles?limit=${this.pageArticleNum}&tag=${tag}`
-      );
-      this.articlelist = response.data.articles;
+      this.clickedId = e.target.id;
+      this.$store.dispatch("getArticleList", {
+        tag,
+        limit: this.pageArticleNum,
+      });
     },
     clickPagelist: async function (nxtPage) {
       if (nxtPage === "pre") {
@@ -123,21 +111,34 @@ export default {
         return;
       }
       window.scrollTo(0, 0);
-      const preArticleNum = (nxtPage - 1) * 10;
-      const response = await axios.get(
-        URL + `/articles?limit=${this.pageArticleNum}&offset=${preArticleNum}`
-      );
-      this.articlelist = response.data.articles;
+      const offset = (nxtPage - 1) * this.pageArticleNum;
+
+      this.$store.dispatch("getArticleList", {
+        offset,
+        limit: this.pageArticleNum,
+      });
       this.currentPage = nxtPage;
     },
   },
   computed: {
+    isLoading: function () {
+      return this.$store.getters.articleListLoading;
+    },
+    articleList: function () {
+      return this.$store.getters.articleList;
+    },
     fistPageNation: function () {
-      return parseInt((this.currentPage - 1) / 10) * 10 + 1;
+      return (
+        parseInt((this.currentPage - 1) / this.pageArticleNum) *
+          this.pageArticleNum +
+        1
+      );
     },
     lastPageNation: function () {
       return Math.min(
-        parseInt((this.currentPage - 1) / 10) * 10 + 10,
+        parseInt((this.currentPage - 1) / this.pageArticleNum) *
+          this.pageArticleNum +
+          this.pageArticleNum,
         this.maxPage
       );
     },
@@ -146,6 +147,11 @@ export default {
 </script>
 <style>
 .tag-default:hover {
+  z-index: 2;
+  background-color: darkslategray;
+  cursor: pointer;
+}
+.activetag {
   z-index: 2;
   background-color: darkslategray;
   cursor: pointer;

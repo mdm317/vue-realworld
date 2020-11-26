@@ -25,7 +25,12 @@ const router = new VueRouter({
     { path: "/login", name: "login", component: Login },
     { path: "/setting", component: Setting },
     { path: "/test", component: test },
-    { path: "/article/:slug", component: Article, props: true },
+    {
+      path: "/article/:slug",
+      name: "Article",
+      component: Article,
+      props: true,
+    },
     { path: "*", component: Home },
   ],
 });

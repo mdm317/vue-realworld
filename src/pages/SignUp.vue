@@ -48,8 +48,6 @@
 </template>
 
 <script>
-import Axios from "axios";
-import { URL } from "../db";
 import BaseInputVue from "../components/BaseInput.vue";
 
 export default {
@@ -61,35 +59,27 @@ export default {
       username: "",
       email: "",
       password: "",
-      errors: {},
     };
   },
   methods: {
-    registerUser: async function () {
-      try {
-        const user = {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-        };
-        await Axios.post(URL + "/users", { user });
-        console.log("[회원가입 성공]:");
-        const loginUser = {
-          email: this.email,
-          password: this.password,
-        };
-        await this.$store.dispatch("login", loginUser);
+    registerUser: function () {
+      const user = {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+      };
+      this.$store.dispatch("signup", user).then(() => {
+        console.log("[this.errors]:", this.errors);
 
-        this.$router.push({ name: "home" });
-      } catch (error) {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.errors
-        ) {
-          this.errors = error.response.data.errors;
+        if (!this.errors) {
+          this.$router.push({ name: "home" });
         }
-      }
+      });
+    },
+  },
+  computed: {
+    errors() {
+      return this.$store.getters.signupErr;
     },
   },
 };

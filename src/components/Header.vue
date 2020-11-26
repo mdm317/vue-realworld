@@ -78,17 +78,11 @@ export default {
   },
   methods: {
     clickLogo: function () {
-      this.active = {
-        home: true,
-        newpost: false,
-        setting: false,
-        signup: false,
-        logout: false,
-      };
+      location.reload();
     },
     clickLogout: function () {
       destroyToken();
-      this.$router.push({ path: "/" });
+      location.reload();
     },
     clickNav: function (e) {
       const newActive = {
@@ -100,7 +94,6 @@ export default {
       };
       newActive[e.currentTarget.id] = true;
       this.active = newActive;
-      console.log(e.currentTarget.id);
     },
   },
 };
