@@ -7,11 +7,7 @@
           <p class="text-xs-center">
             <router-link to="login">Have an account?</router-link>
           </p>
-          <ul v-for="(error, key) in errors" class="error-messages" :key="key">
-            <li v-for="(errorMessage, index) in error" :key="index">
-              {{ key + " " + errorMessage }}
-            </li>
-          </ul>
+          <ErrorMessage :errors="errors" v-if="errors"> </ErrorMessage>
           <form @submit.prevent="registerUser">
             <fieldset class="form-group">
               <BaseInputVue
@@ -49,10 +45,12 @@
 
 <script>
 import BaseInputVue from "../components/BaseInput.vue";
+import ErrorMessage from "../components/ErrorMessage.vue";
 
 export default {
   components: {
     BaseInputVue,
+    ErrorMessage,
   },
   data() {
     return {

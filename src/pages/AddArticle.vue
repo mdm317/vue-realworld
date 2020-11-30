@@ -3,6 +3,8 @@
     <div class="container page">
       <div class="row">
         <div class="col-md-10 offset-md-1 col-xs-12">
+          <ErrorMessage :errors="errors" v-if="errors"> </ErrorMessage>
+
           <form @submit.prevent="submitArticleForm">
             <fieldset>
               <fieldset class="form-group">
@@ -37,18 +39,19 @@
                   class="form-control"
                   placeholder="Enter tags"
                 />
-                <div class="tag-list"></div>
+                <div class="tag-list">
+                  <span
+                    v-for="tag of tagList"
+                    class="tag-default tag-pill"
+                    :key="tag"
+                  >
+                    <i :id="tag" @click="clickDeleteTag" class="ion-close-round"
+                      >❌</i
+                    >
+                    {{ tag }}
+                  </span>
+                </div>
               </fieldset>
-              <span
-                v-for="tag of tagList"
-                class="tag-default tag-pill"
-                :key="tag"
-              >
-                <i :id="tag" @click="clickDeleteTag" class="ion-close-round"
-                  >❌</i
-                >
-                {{ tag }}
-              </span>
 
               <button
                 v-if="!isloading"
@@ -69,9 +72,20 @@
 
 <script>
 import BaseInput from "../components/BaseInput.vue";
+import ErrorMessage from "../components/ErrorMessage.vue";
 export default {
-  components: { BaseInput },
-
+  components: { BaseInput, ErrorMessage },
+  mounted: async function () {
+    const { slug } = this.$route.params;
+    if (slug) {
+      await this.$store.dispatch("getArticleDetail", slug);
+      const article = this.$store.getters.articleDetail;
+      this.title = article.title;
+      this.description = article.description;
+      this.body = article.body;
+      this.tagList = article.tagList;
+    }
+  },
   data() {
     return {
       title: "",
@@ -103,7 +117,6 @@ export default {
         return;
       }
       this.isloading = true;
-      console.log("submit");
       const article = {
         title: this.title,
         description: this.description,
@@ -118,6 +131,11 @@ export default {
     },
     clickDeleteTag(e) {
       this.tagList = this.tagList.filter((tag) => tag !== e.target.id);
+    },
+  },
+  computed: {
+    errors() {
+      return this.$store.getters.addArticleErr;
     },
   },
 };

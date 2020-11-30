@@ -1,7 +1,7 @@
 <template>
   <span>
     <router-link
-      to="{name:addArticle}"
+      :to="{ name: 'addArticle', params: { slug } }"
       class="btn btn-sm btn-outline-secondary"
     >
       <i class="ion-edit"> </i>

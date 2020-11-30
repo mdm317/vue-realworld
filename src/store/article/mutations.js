@@ -41,4 +41,10 @@ export default {
   addComment: function (state, payload) {
     state.comments = [payload, ...state.comments];
   },
+  addArticleReq: function (state) {
+    state.addArticleErr = null;
+  },
+  addArticleFail: function (state, payload) {
+    state.addArticleErr = payload;
+  },
 };

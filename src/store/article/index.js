@@ -10,6 +10,7 @@ const articleStore = {
     articleDetailErr: null,
     commentsErr: null,
     serverErr: null,
+    addArticleErr: null,
   },
   getters: {
     articleList: function (state) {
@@ -20,6 +21,9 @@ const articleStore = {
     },
     comments: function (state) {
       return state.comments;
+    },
+    addArticleErr: function (state) {
+      return state.addArticleErr;
     },
   },
   mutations,

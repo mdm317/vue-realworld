@@ -59,6 +59,7 @@ export default {
     const token = getToken();
     const article = payload;
     try {
+      commit("addArticleReq");
       const response = await Axios.post(
         URL + "/articles",
         {
@@ -72,7 +73,11 @@ export default {
       );
       return response.data.article.slug;
     } catch (error) {
+      if (error.response && error.response.data && error.response.data.errors) {
+        commit("addArticleFail", error.response.data.errors);
+      }
       commit("serverFail", error);
+      throw Error(error);
     }
   },
   deleteArticle: async function ({ commit }, payload) {

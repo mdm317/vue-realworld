@@ -3,7 +3,7 @@
     <div class="banner">
       <div class="container">
         <h1>{{ article.title }}</h1>
-        <UserCard v-if="article" :article="article" />
+        <UserCard />
       </div>
     </div>
 
@@ -17,7 +17,15 @@
           <p>{{ article.body }}</p>
         </div>
       </div>
-
+      <div class="tag-list">
+        <span
+          v-for="tag of article.tagList"
+          class="tag-default tag-pill"
+          :key="tag"
+        >
+          {{ tag }}
+        </span>
+      </div>
       <hr />
       <div class="article-actions">
         <UserCard />

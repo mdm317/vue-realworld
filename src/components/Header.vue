@@ -11,7 +11,7 @@
             <i class="ion-gear-a"></i>&nbsp;<span>Home</span>
           </router-link>
         </li>
-        <li @click="clickNav" class="nav-item" id="newpost">
+        <li v-if="username" @click="clickNav" class="nav-item" id="newpost">
           <router-link :to="{ name: 'addArticle' }" class="nav-link" href="">
             <i class="ion-compose"></i>&nbsp;Add Post
           </router-link>
