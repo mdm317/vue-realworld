@@ -34,7 +34,7 @@
             <div class="tag-list">
               <a
                 v-for="(tag, idx) in tags"
-                class="tag-pill tag-default"
+                class="tag-pill tag-default home-tag"
                 :class="{ activetag: idx == clickedId }"
                 :key="idx"
                 :id="idx"
@@ -146,7 +146,7 @@ export default {
 };
 </script>
 <style>
-.tag-default:hover {
+.home-tag:hover {
   z-index: 2;
   background-color: darkslategray;
   cursor: pointer;

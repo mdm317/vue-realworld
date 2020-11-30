@@ -31,14 +31,25 @@
                 ></textarea>
               </fieldset>
               <fieldset class="form-group">
-                <BaseInput
-                  v-model="tags"
+                <input
+                  @keypress.enter.prevent="addTag"
                   type="text"
                   class="form-control"
                   placeholder="Enter tags"
                 />
                 <div class="tag-list"></div>
               </fieldset>
+              <span
+                v-for="tag of tagList"
+                class="tag-default tag-pill"
+                :key="tag"
+              >
+                <i :id="tag" @click="clickDeleteTag" class="ion-close-round"
+                  >❌</i
+                >
+                {{ tag }}
+              </span>
+
               <button
                 v-if="!isloading"
                 class="btn btn-lg pull-xs-right btn-primary"
@@ -68,12 +79,21 @@ export default {
       body: "",
       tags: "",
       isloading: false,
+      tagList: [],
     };
   },
   methods: {
-    parseTag(tags) {
-      const reg = /#([a-z|A-Z]|[ㄱ-ㅎ|ㅏ-ㅣ|가-힣])+/g;
-      return tags.match(reg);
+    addTag(e) {
+      const tag = e.target.value.trim();
+      if (tag) {
+        for (const tagEl of this.tagList) {
+          if (tagEl === tag) {
+            return;
+          }
+        }
+        this.tagList.push(tag);
+        e.target.value = "";
+      }
     },
     inputBody(e) {
       this.body = e.target.value;
@@ -84,21 +104,27 @@ export default {
       }
       this.isloading = true;
       console.log("submit");
-      const tagList = this.parseTag(this.tags);
       const article = {
         title: this.title,
         description: this.description,
         body: this.body,
       };
-      if (tagList && tagList.length > 0) {
-        article.tagList = tagList;
+      if (this.tagList) {
+        article.tagList = this.tagList;
       }
       this.$store.dispatch("addArticle", article).then((slug) => {
         this.$router.push({ name: "article", params: { slug } });
       });
     },
+    clickDeleteTag(e) {
+      this.tagList = this.tagList.filter((tag) => tag !== e.target.id);
+    },
   },
 };
 </script>
 
-<style></style>
+<style>
+.ion-close-round {
+  cursor: pointer;
+}
+</style>

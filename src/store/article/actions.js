@@ -75,4 +75,18 @@ export default {
       commit("serverFail", error);
     }
   },
+  deleteArticle: async function ({ commit }, payload) {
+    try {
+      const token = getToken();
+      //     DELETE /api/articles/:slug
+      // Authentication required
+      return Axios.delete(URL + `/articles/${payload}`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+    } catch (error) {
+      commit("serverFail", error);
+    }
+  },
 };

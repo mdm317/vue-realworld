@@ -2,7 +2,7 @@
   <div v-if="article" class="article-page">
     <div class="banner">
       <div class="container">
-        <h1>{{ article.slug }}</h1>
+        <h1>{{ article.title }}</h1>
         <UserCard v-if="article" :article="article" />
       </div>
     </div>
