@@ -16,6 +16,7 @@ import SignUp from "../pages/SignUp.vue";
 import Login from "../pages/Login.vue";
 import Setting from "../pages/Setting.vue";
 import Article from "../pages/Article.vue";
+import AddArticle from "../pages/AddArticle.vue";
 
 import test from "./test.vue";
 const router = new VueRouter({
@@ -23,11 +24,12 @@ const router = new VueRouter({
     { path: "/", name: "home", component: Home },
     { path: "/signup", name: "signup", component: SignUp },
     { path: "/login", name: "login", component: Login },
-    { path: "/setting", component: Setting },
+    { path: "/setting", name: "setting", component: Setting },
     { path: "/test", component: test },
+    { path: "/addArticle", name: "addArticle", component: AddArticle },
     {
       path: "/article/:slug",
-      name: "Article",
+      name: "article",
       component: Article,
       props: true,
     },

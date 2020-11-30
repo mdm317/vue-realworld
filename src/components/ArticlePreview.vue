@@ -11,7 +11,7 @@
       </button>
     </div>
     <router-link
-      :to="{ name: 'Article', params: { slug: article.slug } }"
+      :to="{ name: 'article', params: { slug: article.slug } }"
       class="preview-link"
     >
       <h1>{{ article.title }}</h1>

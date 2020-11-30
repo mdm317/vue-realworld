@@ -8,13 +8,13 @@
         <li @click="clickNav" class="nav-item" id="home">
           <!-- Add "active" class when you're on that page" -->
           <router-link to="/" class="nav-link" :class="{ active: active.home }">
-            <i class="ion-gear-a">Home</i>&nbsp;
+            <i class="ion-gear-a"></i>&nbsp;<span>Home</span>
           </router-link>
         </li>
         <li @click="clickNav" class="nav-item" id="newpost">
-          <a class="nav-link" href="">
-            <i class="ion-compose">New Post</i>&nbsp;
-          </a>
+          <router-link :to="{ name: 'addArticle' }" class="nav-link" href="">
+            <i class="ion-compose"></i>&nbsp;Add Post
+          </router-link>
         </li>
         <li
           id="setting"
@@ -23,23 +23,17 @@
           class="nav-item"
           :class="{ active: active.setting }"
         >
-          <router-link to="setting" class="nav-link">
-            <i class="ion-gear-a">Settings</i>&nbsp;
-          </router-link>
-        </li>
-        <li @click="clickNav" v-if="username" class="nav-item">
-          <router-link to="" class="nav-link">
-            <i class="ion-gear-a"> {{ username }}</i
-            >&nbsp;
+          <router-link :to="{ name: 'setting' }" class="nav-link">
+            <i class="ion-gear-a"></i>&nbsp;Settings
           </router-link>
         </li>
         <li @click="clickNav" id="signup" v-else class="nav-item">
           <router-link
-            to="signup"
+            :to="{ name: 'signup' }"
             class="nav-link"
             :class="{ active: active.signup }"
           >
-            <i class="ion-gear-a">Sign Up</i>&nbsp;
+            <i class="ion-gear-a"></i>&nbsp;Sign Up
           </router-link>
         </li>
         <li
@@ -49,8 +43,8 @@
           class="nav-item"
           :class="{ active: active.logout }"
         >
-          <div @click="clickLogout" class="nav-link">
-            <i class="ion-gear-a">Log out</i>&nbsp;
+          <div @click="clickLogout" class="nav-link cursor">
+            <i class="ion-gear-a"></i>&nbsp;Log out
           </div>
         </li>
       </ul>
@@ -98,3 +92,8 @@ export default {
   },
 };
 </script>
+<style>
+.cursor {
+  cursor: pointer;
+}
+</style>

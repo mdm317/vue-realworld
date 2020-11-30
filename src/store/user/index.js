@@ -7,7 +7,6 @@ const userStore = {
     user: {},
     errors: {
       loginErr: null,
-      serverErr: null,
       signupErr: null,
     },
   },
@@ -23,9 +22,6 @@ const userStore = {
     },
     signupErr: (state) => {
       return state.errors.signupErr;
-    },
-    getServerErr: function (state) {
-      return state.errors.serverErr;
     },
   },
   mutations: {
@@ -51,9 +47,6 @@ const userStore = {
     },
     logoutReq: function (state) {
       state.errors.logoutErr = null;
-    },
-    serverFail: function (state, payload) {
-      state.errors.serverErr = payload;
     },
   },
   actions: {
