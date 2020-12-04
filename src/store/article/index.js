@@ -11,8 +11,12 @@ const articleStore = {
     commentsErr: null,
     serverErr: null,
     addArticleErr: null,
+    tags: [],
   },
   getters: {
+    articleListLoading: function (state) {
+      return state.articleListLoading;
+    },
     articleList: function (state) {
       return state.articleList;
     },
@@ -24,6 +28,9 @@ const articleStore = {
     },
     addArticleErr: function (state) {
       return state.addArticleErr;
+    },
+    tags: function (state) {
+      return state.tags;
     },
   },
   mutations,

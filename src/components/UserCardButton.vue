@@ -12,6 +12,7 @@
       >
       <span v-else> {{ " ➕ Follow " + article.author.username }}</span>
     </button>
+    <span>{{ "  " }}</span>
     <button
       @click="clickFavoriteArticleBtn"
       class="btn btn-sm btn-outline-primary"
@@ -31,21 +32,18 @@ import { mapActions } from "vuex";
 
 export default {
   methods: {
-    ...mapActions(["unfollow", "follow", "favoritePost", "unfavoritePost"]),
+    ...mapActions(["followAtArticleDetail"]),
 
     clickFollowBtn: function () {
+      const username = this.article.author.username;
       if (this.article.author.following) {
-        this.unfollow(this.article.author.username);
+        this.followAtArticleDetail({ username, action: "unfollow" });
       } else {
-        this.follow(this.article.author.username);
+        this.followAtArticleDetail({ username, action: "follow" });
       }
     },
     clickFavoriteArticleBtn: function () {
-      if (!this.article.favorited) {
-        this.favoritePost(this.article.slug);
-      } else {
-        this.unfavoritePost(this.article.slug);
-      }
+      this.$emit("click-favorite");
     },
   },
   computed: {

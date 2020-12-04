@@ -4,11 +4,7 @@
       <div class="row">
         <div class="col-md-6 offset-md-3 col-xs-12">
           <h1 class="text-xs-center">Your Settings</h1>
-          <ul v-for="(error, key) in errors" class="error-messages" :key="key">
-            <li v-for="(errorMessage, index) in error" :key="index">
-              {{ key + " " + errorMessage }}
-            </li>
-          </ul>
+          <ErrorMessage :errors="errors"></ErrorMessage>
           <form @submit="submitSetting">
             <fieldset>
               <fieldset class="form-group">
@@ -68,8 +64,9 @@ import BaseInput from "../components/BaseInput.vue";
 import axios from "axios";
 import { getToken } from "../jwt/jwt";
 import { URL } from "../db";
+import ErrorMessage from "../components/ErrorMessage.vue";
 export default {
-  components: { BaseInput },
+  components: { BaseInput, ErrorMessage },
   methods: {
     onTextarea: function (e) {
       this.bio = e.target.value;

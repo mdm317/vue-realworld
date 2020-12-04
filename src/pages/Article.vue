@@ -3,7 +3,7 @@
     <div class="banner">
       <div class="container">
         <h1>{{ article.title }}</h1>
-        <UserCard />
+        <UserCard :article="article" />
       </div>
     </div>
 
@@ -28,7 +28,7 @@
       </div>
       <hr />
       <div class="article-actions">
-        <UserCard />
+        <UserCard :article="article" />
       </div>
 
       <CommentBox v-if="comments" :comments="comments" :slug="slug" />

@@ -47,4 +47,13 @@ export default {
   addArticleFail: function (state, payload) {
     state.addArticleErr = payload;
   },
+  getTagSuc: function (state, payload) {
+    state.tags = payload;
+  },
+  deleteComment(state, payload) {
+    state.comments = state.comments.filter(
+      (comment) => comment.id !== Number(payload)
+    );
+    console.log(state.comments);
+  },
 };

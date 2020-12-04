@@ -17,6 +17,7 @@ import Login from "../pages/Login.vue";
 import Setting from "../pages/Setting.vue";
 import Article from "../pages/Article.vue";
 import AddArticle from "../pages/AddArticle.vue";
+import Profile from "../pages/Profile.vue";
 
 import test from "./test.vue";
 const router = new VueRouter({
@@ -37,6 +38,12 @@ const router = new VueRouter({
       path: "/article/:slug",
       name: "article",
       component: Article,
+      props: true,
+    },
+    {
+      path: "/profile/:username",
+      name: "profile",
+      component: Profile,
       props: true,
     },
     { path: "*", component: Home },

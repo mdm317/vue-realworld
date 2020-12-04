@@ -28,7 +28,15 @@
           </a>
           &nbsp;
           <a href="" class="comment-author">{{ comment.author.username }}</a>
-          <span class="date-posted">{{ calDate(comment.createdAt) }}</span>
+          <span class="date-posted">{{ mapDate(comment.createdAt) }}</span>
+          <span
+            v-if="user.username === comment.author.username"
+            class="mod-options"
+          >
+            <div :id="comment.id" @click="clickDeleteComment" class="icon-btn">
+              🗑
+            </div></span
+          >
         </div>
       </div>
     </div>
@@ -37,6 +45,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { getMonth } from "../utils";
 
 export default {
   props: {
@@ -47,18 +56,10 @@ export default {
       content: "",
     };
   },
-
   computed: {
     ...mapGetters(["comments", "user"]),
   },
-
   methods: {
-    calDate: function (dateStr) {
-      // "2016-02-18T03:22:56.637Z",
-      const month = dateStr.slice(5, 7);
-      const date = dateStr.slice(8, 10);
-      return month + " / " + date;
-    },
     submitComment: function () {
       this.$store
         .dispatch("addComment", {
@@ -69,8 +70,24 @@ export default {
           this.content = "";
         });
     },
+    mapDate(dateStr) {
+      const year = dateStr.slice(0, 4);
+      const month = dateStr.slice(5, 7);
+      const date = dateStr.slice(8, 10);
+      return getMonth(month) + " " + date + "," + year;
+    },
+    clickDeleteComment(e) {
+      this.$store.dispatch("deleteComment", {
+        id: e.target.id,
+        slug: this.slug,
+      });
+    },
   },
 };
 </script>
 
-<style></style>
+<style>
+.icon-btn {
+  cursor: pointer;
+}
+</style>

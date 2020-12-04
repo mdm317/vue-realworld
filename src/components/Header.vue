@@ -36,6 +36,15 @@
             <i class="ion-gear-a"></i>&nbsp;Sign Up
           </router-link>
         </li>
+        <li @click="clickNav" v-if="username" id="profile" class="nav-item">
+          <router-link
+            :to="{ name: 'profile', params: { username } }"
+            class="nav-link"
+            :class="{ active: active.signup }"
+          >
+            <i class="ion-gear-a"></i>&nbsp;{{ username }}
+          </router-link>
+        </li>
         <li
           id="logout"
           @click="clickNav"
@@ -62,6 +71,7 @@ export default {
         setting: false,
         signup: false,
         logout: false,
+        profile: false,
       },
     };
   },
@@ -85,6 +95,7 @@ export default {
         setting: false,
         signup: false,
         logout: false,
+        profile: false,
       };
       newActive[e.currentTarget.id] = true;
       this.active = newActive;

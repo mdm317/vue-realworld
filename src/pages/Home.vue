@@ -12,19 +12,35 @@
           <div class="feed-toggle">
             <ul class="nav nav-pills outline-active">
               <li class="nav-item">
-                <a class="nav-link disabled" href="">Your Feed</a>
+                <a
+                  @click.prevent="clickUserFeed"
+                  class="nav-link"
+                  :class="{
+                    disabled: username === undefined,
+                    active: feedState === 'USER',
+                  }"
+                  href=""
+                >
+                  Your Feed
+                </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="">Global Feed</a>
+                <a
+                  @click.prevent="clickGlobalFeed"
+                  class="nav-link"
+                  :class="{ active: feedState === 'GLOBAL' }"
+                  href=""
+                  >Global Feed</a
+                >
               </li>
             </ul>
           </div>
-          <h1 v-if="isLoading">...Loading</h1>
-          <ArticlePreviewVue
-            v-for="(article, index) in articleList"
-            :key="index"
-            :article="article"
-          />
+          <ArticleList
+            :maxPage="maxPage"
+            :feedState="feedState"
+            :pageArticleNum="pageArticleNum"
+            :username="username"
+          ></ArticleList>
         </div>
 
         <div class="col-md-3">
@@ -44,104 +60,81 @@
             </div>
           </div>
         </div>
-        <PagenationVue
-          :first="fistPageNation"
-          :last="lastPageNation"
-          :isPre="currentPage !== 1"
-          :isNxt="currentPage !== maxPage"
-          :currentPage="currentPage"
-          @clickpage="clickPagelist"
-        >
-        </PagenationVue>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ArticlePreviewVue from "../components/ArticlePreview.vue";
-import PagenationVue from "../components/Pagenation.vue";
+import { mapGetters } from "vuex";
+import ArticleList from "../components/ArticleList.vue";
 
 export default {
   components: {
-    ArticlePreviewVue,
-    PagenationVue,
+    ArticleList,
   },
   mounted() {
-    this.$store.dispatch("getArticleList", { limit: this.pageArticleNum });
+    this.$store.dispatch("getTags");
   },
   data() {
     return {
-      currentPage: 1,
+      feedState: "GLOBAL",
       clickedId: -1,
       maxPage: 16,
       pageArticleNum: 10,
-      tags: [
-        "programming",
-        "javascript",
-        "emberjs",
-        "angularjs",
-        "react",
-        "mean",
-        "node",
-        "rails",
-      ],
+      selectedTag: "",
     };
   },
   methods: {
     clickTag: async function (e) {
       const tag = e.target.innerText;
-      this.clickedId = e.target.id;
-      this.$store.dispatch("getArticleList", {
-        tag,
-        limit: this.pageArticleNum,
-      });
-    },
-    clickPagelist: async function (nxtPage) {
-      if (nxtPage === "pre") {
-        nxtPage = this.currentPage - 1;
+      if (this.clickedId === e.target.id) {
+        this.clickedId = -1;
+        this.selectedTag = "";
+      } else {
+        this.clickedId = e.target.id;
+        this.selectedTag = tag;
       }
-      if (nxtPage === "nxt") {
-        nxtPage = this.currentPage + 1;
-      }
-      if (nxtPage === this.currentPage) {
-        return;
-      }
-      if (nxtPage > this.maxPage) {
-        return;
-      }
-      window.scrollTo(0, 0);
-      const offset = (nxtPage - 1) * this.pageArticleNum;
 
-      this.$store.dispatch("getArticleList", {
-        offset,
+      this.getArticleAgain();
+      this.currentPage = 1;
+    },
+
+    clickUserFeed() {
+      if (!this.username) {
+        return;
+      }
+      this.feedState = "USER";
+      this.getArticleAgain();
+
+      this.currentPage = 1;
+      // clickedId: -1,
+      // maxPage: 16, 변경할 수 있는 api 가 없음
+    },
+    clickGlobalFeed() {
+      this.feedState = "GLOBAL";
+      this.getArticleAgain();
+      this.currentPage = 1;
+      // clickedId: -1,
+      // maxPage: 16, 변경할 수 있는 api 가 없음
+    },
+    getArticleAgain(offset = 0) {
+      const payload = {
         limit: this.pageArticleNum,
-      });
-      this.currentPage = nxtPage;
+        tag: this.selectedTag,
+        offset,
+      };
+      if (this.feedState === "USER") {
+        payload.username = this.username;
+      }
+      this.$store.dispatch("getArticleList", payload);
     },
   },
   computed: {
-    isLoading: function () {
-      return this.$store.getters.articleListLoading;
-    },
-    articleList: function () {
-      return this.$store.getters.articleList;
-    },
-    fistPageNation: function () {
-      return (
-        parseInt((this.currentPage - 1) / this.pageArticleNum) *
-          this.pageArticleNum +
-        1
-      );
-    },
-    lastPageNation: function () {
-      return Math.min(
-        parseInt((this.currentPage - 1) / this.pageArticleNum) *
-          this.pageArticleNum +
-          this.pageArticleNum,
-        this.maxPage
-      );
-    },
+    ...mapGetters({
+      isLoading: "articleListLoading",
+    }),
+    ...mapGetters(["articleList", "username", "tags"]),
   },
 };
 </script>

@@ -1,15 +1,6 @@
 <template>
   <div class="article-preview">
-    <div class="article-meta">
-      <a href="profile.html"><img :src="article.author.image" /></a>
-      <div class="info">
-        <a href="" class="author">{{ article.author.username }}</a>
-        <span class="date">{{ calDate(article.createdAt) }}</span>
-      </div>
-      <button class="btn btn-outline-primary btn-sm pull-xs-right">
-        <i class="ion-heart"></i> {{ article.favoritesCount }}
-      </button>
-    </div>
+    <UserCard :isHome="true" :article="article"></UserCard>
     <router-link
       :to="{ name: 'article', params: { slug: article.slug } }"
       class="preview-link"
@@ -21,7 +12,10 @@
   </div>
 </template>
 <script>
+import UserCard from "./UserCard.vue";
+
 export default {
+  components: { UserCard },
   props: {
     article: {
       slug: String,
@@ -41,14 +35,7 @@ export default {
       },
     },
   },
-  methods: {
-    calDate: function (dateStr) {
-      // "2016-02-18T03:22:56.637Z",
-      const month = dateStr.slice(5, 7);
-      const date = dateStr.slice(8, 10);
-      return month + " / " + date;
-    },
-  },
+  methods: {},
 };
 </script>
 <style scoped></style>
